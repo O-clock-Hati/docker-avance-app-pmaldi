@@ -1,0 +1,28 @@
+FROM node:current-alpine AS builder
+
+ENV VITE_PROMO=Hati
+ENV VITE_ENV=prod
+
+WORKDIR /app
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+## 2e étape : On déploie notre application avec Serve
+
+FROM node:current-alpine AS prod
+
+# -g de npm veut dire global, le package s'installera sur l'entiereté de notre conteneur.
+RUN npm install -g serve 
+
+COPY --from=builder /app/dist /app
+
+WORKDIR /app
+
+EXPOSE 80
+
+CMD ["serve", "-s", ".", "-l", "80"]
