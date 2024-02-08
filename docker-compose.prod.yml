@@ -4,9 +4,16 @@ services:
     build:
       context: .
       dockerfile: dockerfile.prod
-    ports:
-      - "80:80" # Mapper le port 80 du conteneur sur le port 80 de l'hôte
     environment:
       - NODE_ENV=production
       - VITE_PROMO=Hati
       - VITE_ENV=prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`app.localhost`)"
+      - "traefik.http.routers.app.entrypoints=web"
+
+networks:
+  default:
+    name: traefik_default # Use the same network as Traefik (docker network ls to find it if needed)
+    external: true
