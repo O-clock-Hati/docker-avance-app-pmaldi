@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile.prod
+    ports:
+      - "80:80" # Mapper le port 80 du conteneur sur le port 80 de l'hôte
+    environment:
+      - NODE_ENV=production
+      - VITE_PROMO=Hati
+      - VITE_ENV=prod
